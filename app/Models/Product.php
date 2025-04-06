@@ -14,11 +14,13 @@ class Product extends Model
         'category',
         'alternative_brands',
         'logo',
-        'description'
+        'description',
+        'product_images'  // Add this line
     ];
 
     protected $casts = [
         'alternative_brands' => 'array',
         'product_images' => 'array',
     ];
+
 }

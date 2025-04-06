@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class ProductController extends Controller
 {
@@ -21,6 +22,7 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
+
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'category' => 'required|string|max:255',
@@ -47,6 +49,9 @@ class ProductController extends Controller
             }
         }
 
+        // Debug log to check what we're trying to store
+        Log::info('Product Images Paths:', $productImagePaths);
+
         // Create the product
         $product = Product::create([
             'name' => $validated['name'],
@@ -54,7 +59,7 @@ class ProductController extends Controller
             'alternative_brands' => $request->alternative_brands ?? null,
             'description' => $request->description ?? null,
             'logo' => $logoPath,
-            'product_images' => $productImagePaths
+            'product_images' => !empty($productImagePaths) ? $productImagePaths : null
         ]);
 
         return response()->json($product, 201);
@@ -68,16 +73,11 @@ class ProductController extends Controller
         return response()->json($product);
     }
 
-
-
     /**
      * Remove the specified product.
      */
     public function destroy(Product $product)
     {
-
-
-
         $product->delete();
         return response()->json(null, 204);
     }
